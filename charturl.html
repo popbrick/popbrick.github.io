@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chart</title>
+    <!-- Link the external CSS file -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="chart-container">
+        <div id="chart"></div>
+    </div>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <script>
+        function setTimeseriesData(timeseriesData) {
+            var chartElement = document.getElementById('chart');
+            var chartContainer = document.getElementById('chart-container');
+
+            var chart = LightweightCharts.createChart(chartElement, {
+                width: chartContainer.clientWidth,
+                height: chartContainer.clientHeight,
+            });
+
+            var areaSeries = chart.addAreaSeries({
+                lineWidth: 2,
+            });
+
+            // Set data for the area series
+            areaSeries.setData(timeseriesData);
+
+            var darkTheme = {
+                chart: {
+                    layout: {
+                        background: {
+                            type: 'solid',
+                            color: '#2B2B43',
+                        },
+                        lineColor: '#2B2B43',
+                        textColor: '#D9D9D9',
+                    },
+                    grid: {
+                        vertLines: {
+                            color: '#363C4E ',
+                        },
+                        horzLines: {
+                            color: '#363C4E',
+                        },
+                    },
+                },
+            };
+
+            chart.applyOptions(darkTheme.chart);
+            chart.timeScale().fitContent();
+        }
+
+        window.addEventListener('resize', function() {
+            chart.applyOptions({
+                width: chartContainer.clientWidth,
+                height: chartContainer.clientHeight,
+            });
+        });
+
+        // Function to parse URL parameters and set timeseries data
+        function parseUrlParamsAndSetData() {
+            // Get the URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            // Get the 'timeseriesData' parameter value
+            const timeseriesDataParam = urlParams.get('timeseriesData');
+            // Parse the JSON string to convert it into an array
+            const timeseriesData = JSON.parse(timeseriesDataParam);
+            // Call the setTimeseriesData function with the parsed data
+            setTimeseriesData(timeseriesData);
+        }
+
+        // Call the function to parse URL parameters and set data
+        parseUrlParamsAndSetData();
+    </script>
+</body>
+</html>
